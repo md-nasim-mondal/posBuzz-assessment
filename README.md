@@ -19,6 +19,11 @@ POSBuzz is a modern, full-stack Point of Sale (POS) application built to demonst
 - **State Management**: Zustand (Auth Store), TanStack Query (Server State)
 - **Styling**: TailwindCSS (Utility) + AntD Token System
 
+## 🚀 Deployment
+
+- **Frontend**: [posbuzz-assessment-client.vercel.app](https://posbuzz-assessment-client.vercel.app)
+- **Backend**: [posbuzz-assessment-server.onrender.com](https://posbuzz-assessment-server.onrender.com)
+
 ## 📂 Project Structure
 
 ```
@@ -63,10 +68,12 @@ posBuzz-assessment/
 3.  Configure Environment Variables:
     - Create a `.env` file in `server/` (copy `.env.example` if available, or use the template below):
     ```env
-    DATABASE_URL="postgresql://user:password@localhost:5432/posbuzz?schema=public"
+    DATABASE_URL="postgresql://user:password@hostname:port/db?schema=public"
+    DIRECT_URL="postgresql://user:password@hostname:port/db"
     JWT_SECRET="your-super-secret-key"
-    email_user="your-email@gmail.com"
-    email_pass="your-app-password"
+    BREVO_API_KEY="your-brevo-key"
+    BREVO_FROM_EMAIL="sender@example.com"
+    FRONTEND_URL="http://localhost:5173"
     ```
 4.  Run Database Migrations:
     ```bash
@@ -76,7 +83,7 @@ posBuzz-assessment/
     ```bash
     pnpm start:dev
     ```
-    The server will run on `http://localhost:3000`.
+    The server will run on `http://localhost:3000`. It will automatically seed an Admin user if one does not exist.
 
 ### 2. Frontend Setup
 
@@ -103,11 +110,9 @@ Import the `postman_collection.json` file (located in the root directory) into P
 - **Sales**: Create sales transactions.
 
 ### Login Credentials
-You can register a new user via the UI or API.
-For quick testing, if you seeded the DB:
+The system automatically seeds a default Admin user on startup if missing:
 - **Email**: `admin@posbuzz.com`
-- **Password**: `admin123`
-*(Note: Registration via UI requires clicking the email verification link logged in server console if email is not configured)*
+- **Password**: `123456`
 
 ## ✨ Features
 - **Secure Auth**: JWT-based auth with email verification loop.
