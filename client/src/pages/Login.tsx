@@ -18,8 +18,8 @@ export default function LoginPage() {
       setAuth(data.access_token, data.user);
       message.success('Login successful');
       navigate('/');
-    } catch (error) {
-      message.error('Invalid credentials');
+    } catch (error: any) {
+      message.error(error.response?.data?.message || 'Login failed');
     } finally {
       setLoading(false);
     }

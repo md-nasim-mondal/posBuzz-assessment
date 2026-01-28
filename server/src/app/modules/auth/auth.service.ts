@@ -1,5 +1,5 @@
 
-import { Injectable, BadRequestException, NotFoundException } from '@nestjs/common';
+import { Injectable, BadRequestException, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
@@ -30,10 +30,7 @@ export class AuthService {
 
   async login(user: any) {
     if (!user.isVerified) {
-       // Optional: Block login or just warn. User asked for "verification system".
-       // Let's assume we want to block or at least inform.
-       // For now, allow but return status? Or throw?
-       // throw new BadRequestException('Email not verified');
+       throw new UnauthorizedException('Email not verified. Please verify your email before logging in.');
     }
 
     const payload = { email: user.email, sub: user.id, role: user.role };

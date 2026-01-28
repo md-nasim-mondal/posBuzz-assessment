@@ -18,7 +18,12 @@ export default function RegisterPage() {
       message.success(data.message || 'Registration successful! Please verify your email.');
       navigate('/login');
     } catch (error: any) {
-      message.error(error.response?.data?.message || 'Registration failed');
+      const msg = error.response?.data?.message;
+      if (Array.isArray(msg)) {
+        msg.forEach((m: string) => message.error(m));
+      } else {
+        message.error(msg || 'Registration failed');
+      }
     } finally {
       setLoading(false);
     }
