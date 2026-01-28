@@ -12,14 +12,15 @@ POSBuzz is a modern, full-stack Point of Sale (POS) application built to demonst
 
 ### Backend
 - **Framework**: NestJS (Modular Architecture)
-- **Database**: PostgreSQL
+- **Database**: PostgreSQL (Supabase)
 - **ORM**: Prisma (using `@prisma/adapter-pg` and `pg` connection pool)
 - **Caching**: Redis
-- **Email**: Nodemailer (SMTP)
+- **Email**: Brevo API (Transactional Emails)
 - **Auth**: Passport-JWT, Bcrypt
 
 ### Frontend
 - **Framework**: React + Vite
+- **Routing**: React Router v7 (Data Routing)
 - **UI Component Library**: Ant Design
 - **State Management**: Zustand (Auth Store), TanStack Query (Server State)
 - **Styling**: TailwindCSS (Utility) + AntD Token System
@@ -30,17 +31,19 @@ POSBuzz is a modern, full-stack Point of Sale (POS) application built to demonst
 posBuzz-assessment/
 ├── client/                 # React Frontend
 │   ├── src/
-│   │   ├── pages/          # Application Pages (POS, Products, Auth)
+│   │   ├── pages/          # Application Pages
 │   │   ├── components/     # Reusable Components
-│   │   ├── lib/            # Utility libraries (Axios, QueryClient)
-│   │   └── store/          # Global State (Zustand)
+│   │   ├── layout/         # Layouts (Dashboard, etc.)
+│   │   ├── routes/         # React Router v7 Configuration
+│   │   ├── lib/            # Utility libraries
+│   │   └── store/          # Global State
 │   └── ...
 ├── server/                 # NestJS Backend
 │   ├── prisma/             # Schema & Migrations
 │   ├── src/
 │   │   ├── app/
-│   │   │   ├── modules/    # Feature Modules (Auth, Users, Products, Sales)
-│   │   │   └── shared/     # Shared Modules (Prisma, Email)
+│   │   │   ├── modules/    # Feature Modules
+│   │   │   └── shared/     # Shared Modules (Email, Prisma)
 │   │   └── ...
 │   └── ...
 ├── postman_collection.json # API Documentation
@@ -66,12 +69,16 @@ posBuzz-assessment/
     pnpm install
     ```
 3.  Configure Environment Variables:
-    - Create a `.env` file in `server/` (copy `.env.example` if available, or use the template below):
+    - Copy `.env.example` to `.env`:
+    ```bash
+    cp .env.example .env
+    ```
+    - Update the variables (Database, Redis, Brevo API Key):
     ```env
-    DATABASE_URL="postgresql://user:password@localhost:5432/posbuzz?schema=public"
-    JWT_SECRET="your-super-secret-key"
-    email_user="your-email@gmail.com"
-    email_pass="your-app-password"
+    DATABASE_URL="..."
+    DIRECT_URL="..."
+    BREVO_API_KEY="..."
+    FRONTEND_URL="http://localhost:5173"
     ```
 4.  Run Database Migrations:
     ```bash
@@ -93,7 +100,16 @@ posBuzz-assessment/
     ```bash
     pnpm install
     ```
-3.  Start the Development Server:
+3.  Configure Environment Variables:
+    - Copy `.env.example` to `.env`:
+    ```bash
+    cp .env.example .env
+    ```
+    - Set the Backend URL:
+    ```env
+    VITE_PUBLIC_BASE_API_URL="http://localhost:3000"
+    ```
+4.  Start the Development Server:
     ```bash
     pnpm dev
     ```
@@ -103,19 +119,19 @@ posBuzz-assessment/
 
 ### API Testing (Postman)
 Import the `postman_collection.json` file (located in the root directory) into Postman to test all API endpoints, including:
-- **Auth**: Register (with email verify), Login, Forgot/Reset Password.
+- **Auth**: Register (with email verification), Login, Forgot/Reset Password.
 - **Products**: CRUD operations.
 - **Sales**: Create sales transactions.
 
-### Login Credentials
-You can register a new user via the UI or API.
-For quick testing, if you seeded the DB:
+### Login Credentials (Seeded)
+If you seeded the DB:
 - **Email**: `admin@posbuzz.com`
 - **Password**: `admin123`
-*(Note: Registration via UI requires clicking the email verification link logged in server console if email is not configured)*
 
 ## ✨ Features
 - **Secure Auth**: JWT-based auth with email verification loop.
+- **Robust Role**: Admin/User role support.
 - **Real-time Stock**: Transactional sales ensure stock is never oversold.
-- **Responsive POS**: Clean, grid-based POS interface for quick sales.
+- **Responsive POS**: Mobile-first design managed via React Router v7.
 - **Data Tables**: Managed product inventory with searching and sorting.
+- **User Profile**: Dynamic dashboard with user details.
