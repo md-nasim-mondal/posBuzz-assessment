@@ -7,6 +7,12 @@ import { queryClient } from './lib/queryClient.ts'
 import { BrowserRouter } from 'react-router-dom'
 import { ConfigProvider } from 'antd'
 
+if (import.meta.env.PROD) {
+  console.log = () => {};
+  console.warn = () => {};
+  console.error = () => {};
+}
+
 createRoot(document.getElementById('root')!).render(
   <QueryClientProvider client={queryClient}>
     <ConfigProvider

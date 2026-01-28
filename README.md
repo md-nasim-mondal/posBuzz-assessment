@@ -3,6 +3,11 @@
 
 POSBuzz is a modern, full-stack Point of Sale (POS) application built to demonstrate a scalable, modular, and production-ready architecture. It features secure authentication (including email verification), product management, and a transactional sales system.
 
+## 🚀 Deployment Links
+
+- **Frontend (Live)**: [https://posbuzz-assessment-client.vercel.app](https://posbuzz-assessment-client.vercel.app)
+- **Backend (API)**: [https://posbuzz-assessment-server.onrender.com](https://posbuzz-assessment-server.onrender.com)
+
 ## 🚀 Tech Stack
 
 ### Backend
