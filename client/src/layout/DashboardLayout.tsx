@@ -1,6 +1,6 @@
 
 import { useState } from 'react';
-import { Layout, Menu, Button, theme, Grid, Drawer } from 'antd'; // Added Grid, Drawer
+import { Layout, Menu, Button, theme, Grid, Drawer, Popover, Avatar, Typography } from 'antd'; // Added Popover, Avatar, Typography
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import {
   ShoppingOutlined,
@@ -12,27 +12,50 @@ import { useAuthStore } from '../store/useAuthStore';
 
 const { Header, Sider, Content } = Layout;
 const { useBreakpoint } = Grid;
+const { Title, Text } = Typography;
 
 export default function DashboardLayout() {
   const navigate = useNavigate();
   const location = useLocation();
   const screens = useBreakpoint();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [openProfile, setOpenProfile] = useState(false);
   
-  // screens.lg might be undefined on first render during hydration, so we default to true (desktop) to avoid layout shift,
-  // or handle usage carefully. safest is checking !screens.lg for mobile.
-  // Note: antd useBreakpoint sometimes returns empty object on initial render.
   const isMobile = screens.lg === false;
 
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
   const logout = useAuthStore((state) => state.logout);
+  const user = useAuthStore((state) => state.user);
 
   const handleLogout = () => {
     logout();
     navigate('/login');
   };
+
+  const userInitials = user?.name 
+    ? user.name.split(' ').map((n: string) => n[0]).join('').substring(0, 2).toUpperCase()
+    : 'U';
+
+  const profileContent = (
+    <div className="w-64">
+      <div className="flex flex-col items-center p-4 border-b border-gray-100">
+        <Avatar size={64} style={{ backgroundColor: '#1890ff', fontSize: '24px' }}>
+          {userInitials}
+        </Avatar>
+        <Title level={4} style={{ marginTop: '16px', marginBottom: '4px' }}>
+          {user?.name || 'User'}
+        </Title>
+        <Text type="secondary">{user?.email || 'email@example.com'}</Text>
+      </div>
+      <div className="p-2">
+        <Button type="text" danger block icon={<LogoutOutlined />} onClick={handleLogout}>
+          Logout
+        </Button>
+      </div>
+    </div>
+  );
 
   const menuItems = [
     {
@@ -67,17 +90,6 @@ export default function DashboardLayout() {
         className="mt-4 border-none"
         items={menuItems}
       />
-      <div className="absolute bottom-4 w-full px-4">
-           <Button 
-              type="primary" 
-              danger 
-              icon={<LogoutOutlined />} 
-              block 
-              onClick={handleLogout}
-           >
-              Logout
-           </Button>
-      </div>
     </>
   );
 
@@ -110,10 +122,21 @@ export default function DashboardLayout() {
         open={mobileMenuOpen}
         styles={{ body: { padding: 0, backgroundColor: '#001529' } }}
         width={250}
-        closeIcon={null} // custom styling if needed, or default
+        closeIcon={null} 
       >
         <div className="h-full relative text-white">
            {SidebarContent}
+           <div className="absolute bottom-4 w-full px-4">
+             <Button 
+                type="primary" 
+                danger 
+                icon={<LogoutOutlined />} 
+                block 
+                onClick={handleLogout}
+             >
+                Logout
+             </Button>
+            </div>
         </div>
       </Drawer>
 
@@ -141,10 +164,19 @@ export default function DashboardLayout() {
            ) : <div />} 
 
            <div className="flex items-center gap-2 sm:gap-4">
-               <span className="text-gray-500 hidden sm:block">Welcome, Admin</span>
-               <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold shrink-0">
-                  A
-               </div>
+               <span className="text-gray-500 hidden sm:block">Welcome, {user?.name || 'User'}</span>
+               <Popover 
+                 content={profileContent} 
+                 trigger="click" 
+                 open={openProfile} 
+                 onOpenChange={setOpenProfile}
+                 placement="bottomRight"
+                 arrow={false}
+               >
+                 <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold shrink-0 cursor-pointer hover:bg-blue-200 transition-colors">
+                    {userInitials}
+                 </div>
+               </Popover>
            </div>
         </Header>
         <Content style={{ margin: '24px 16px 0', overflow: 'initial' }}>
