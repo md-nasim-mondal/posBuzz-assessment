@@ -7,8 +7,18 @@ import { PrismaPg } from '@prisma/adapter-pg';
 @Injectable()
 export class PrismaService extends PrismaClient implements OnModuleInit, OnModuleDestroy {
   constructor() {
-    const connectionString = process.env.DATABASE_URL;
-    const pool = new Pool({ connectionString });
+    // Prefer DIRECT_URL for long-running servers (Render) to avoid Transaction Pooler issues
+    const connectionString = process.env.DIRECT_URL || process.env.DATABASE_URL;
+    if (!connectionString) {
+      throw new Error('Database connection string (DIRECT_URL/DATABASE_URL) is not defined');
+    }
+    
+    // console.log(`Connecting to DB: ${connectionString.split('@')[1]}`); // Log host for debug
+    
+    const pool = new Pool({ 
+      connectionString,
+      ssl: { rejectUnauthorized: false }
+    });
     const adapter = new PrismaPg(pool);
     super({ 
       adapter,
