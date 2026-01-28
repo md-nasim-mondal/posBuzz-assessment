@@ -14,6 +14,7 @@ export class EmailService {
     this.frontendUrl = this.configService.get<string>('FRONTEND_URL') || 'http://localhost:5173';
     this.apiKey = this.configService.get<string>('BREVO_API_KEY') || '';
     this.fromEmail = this.configService.get<string>('BREVO_FROM_EMAIL') || '';
+    this.logger.log(`Using Frontend URL: ${this.frontendUrl}`);
   }
 
   private async sendEmail(to: string, subject: string, htmlContent: string): Promise<boolean> {
@@ -52,6 +53,7 @@ export class EmailService {
   }
 
   async sendVerificationEmail(email: string, token: string) {
+    this.logger.log(`Preparing Verification Email. Frontend URL: ${this.frontendUrl}`);
     const url = `${this.frontendUrl}/verify-email?token=${token}`;
     const html = `<p>Welcome to POSBuzz! Click <a href="${url}">here</a> to verify your email.</p>`;
     await this.sendEmail(email, 'Verify your Email - POSBuzz', html);

@@ -1,4 +1,6 @@
 enum Role {
   ADMIN
   STAFF
+  
+  @@schema("posbuzz")
 }

@@ -8,6 +8,8 @@ model Product {
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
   saleItems     SaleItem[]
+
+  @@schema("posbuzz")
 }
 
 model Sale {
@@ -17,6 +19,8 @@ model Sale {
   createdAt DateTime   @default(now())
   user      User       @relation(fields: [userId], references: [id])
   items     SaleItem[]
+
+  @@schema("posbuzz")
 }
 
 model SaleItem {
@@ -27,4 +31,6 @@ model SaleItem {
   price     Decimal @db.Decimal(10, 2)
   sale      Sale    @relation(fields: [saleId], references: [id])
   product   Product @relation(fields: [productId], references: [id])
+
+  @@schema("posbuzz")
 }
