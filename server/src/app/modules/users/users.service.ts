@@ -62,26 +62,4 @@ export class UsersService {
       data: { password: hashedPassword, resetPasswordToken: null, resetPasswordExpires: null },
     });
   }
-
-  async seedAdmin() {
-    const adminEmail = 'admin@posbuzz.com';
-    const existingAdmin = await this.prisma.user.findUnique({
-      where: { email: adminEmail },
-    });
-
-    if (!existingAdmin) {
-      const salt = await bcrypt.genSalt();
-      const hashedPassword = await bcrypt.hash('123456', salt);
-      await this.prisma.user.create({
-        data: {
-          email: adminEmail,
-          password: hashedPassword,
-          name: 'Super Admin',
-          role: 'ADMIN',
-          isVerified: true,
-        },
-      });
-      console.log('Admin user seeded: admin@posbuzz.com / 123456');
-    }
-  }
 }
