@@ -30,8 +30,8 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <Card className="w-96 shadow-lg">
+    <div className="min-h-screen flex items-center justify-center bg-gray-100 p-4">
+      <Card className="w-full max-w-md shadow-lg">
         <div className="text-center mb-6">
           <Title level={2}>Sign Up</Title>
           <Text type="secondary">Create your POSBuzz account</Text>

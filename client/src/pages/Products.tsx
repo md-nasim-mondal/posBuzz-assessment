@@ -68,7 +68,13 @@ export default function ProductsPage() {
         </Button>
       </div>
 
-      <Table dataSource={products} columns={columns} rowKey="id" loading={isLoading} />
+      <Table 
+        dataSource={products} 
+        columns={columns} 
+        rowKey="id" 
+        loading={isLoading} 
+        scroll={{ x: 'max-content' }} 
+      />
 
       <Modal
         title="Add Product"

@@ -26,8 +26,8 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <Card title="POSBuzz Login" className="w-96 shadow-lg">
+    <div className="min-h-screen flex items-center justify-center bg-gray-100 p-4">
+      <Card title="POSBuzz Login" className="w-full max-w-md shadow-lg">
         <Form
           name="login"
           initialValues={{ remember: true }}
@@ -47,7 +47,7 @@ export default function LoginPage() {
             <Input.Password prefix={<LockOutlined />} placeholder="Password" size="large" />
           </Form.Item>
 
-          <div className="flex justify-between mb-4">
+          <div className="flex flex-col sm:flex-row justify-between mb-4 gap-2">
              <Link to="/register">Register now!</Link>
              <Link to="/forgot-password">Forgot password?</Link>
           </div>

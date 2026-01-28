@@ -85,7 +85,7 @@ export default function POSPage() {
   );
 
   return (
-    <div className="h-[calc(100vh-100px)] flex gap-4">
+    <div className="h-[calc(100vh-100px)] flex flex-col lg:flex-row gap-4">
       {/* Product Grid */}
       <div className="flex-1 overflow-y-auto pr-2">
         <Input.Search
@@ -97,28 +97,30 @@ export default function POSPage() {
         
         <Row gutter={[16, 16]}>
           {filteredProducts?.map((product: any) => (
-            <Col xs={24} sm={12} md={8} lg={6} key={product.id}>
+            <Col xs={24} sm={12} md={8} lg={6} xl={6} key={product.id}>
               <Card
                 hoverable
-                className="h-full flex flex-col"
-                cover={<div className="h-32 bg-gray-200 flex items-center justify-center text-4xl">📦</div>}
+                className="h-full flex flex-col shadow-sm"
+                cover={<div className="h-32 bg-gray-100 flex items-center justify-center text-4xl rounded-t-lg">📦</div>}
                 actions={[
-                  <Button
-                    type="primary"
-                    disabled={product.stockQuantity <= 0}
-                    onClick={() => addToCart(product)}
-                    className="w-11/12"
-                  >
-                    {product.stockQuantity > 0 ? 'Add' : 'Out of Stock'}
-                  </Button>
+                  <div className="px-2 w-full">
+                    <Button
+                      type="primary"
+                      disabled={product.stockQuantity <= 0}
+                      onClick={() => addToCart(product)}
+                      className="w-full"
+                    >
+                      {product.stockQuantity > 0 ? 'Add' : 'Out'}
+                    </Button>
+                  </div>
                 ]}
               >
                 <Meta
-                  title={product.name}
+                  title={<div className="text-lg font-medium truncate">{product.name}</div>}
                   description={
-                    <div className="flex justify-between">
-                       <Text strong>${Number(product.price).toFixed(2)}</Text>
-                       <Text type="secondary">Stock: {product.stockQuantity}</Text>
+                    <div className="flex justify-between items-center mt-2">
+                       <Text strong className="text-blue-600 text-lg">${Number(product.price).toFixed(2)}</Text>
+                       <Text type="secondary" className="text-xs">Stock: {product.stockQuantity}</Text>
                     </div>
                   }
                 />
@@ -129,34 +131,35 @@ export default function POSPage() {
       </div>
 
       {/* Cart Sidebar */}
-      <div className="w-96 bg-white p-4 rounded-lg shadow-md flex flex-col">
+      <div className="w-full lg:w-96 bg-white p-4 rounded-lg shadow-md flex flex-col h-[40%] lg:h-auto border-t lg:border-t-0 border-gray-200 flex-shrink-0">
         <Title level={4}>Current Sale</Title>
         <List
-          className="flex-1 overflow-y-auto"
+          className="flex-1 overflow-y-auto min-h-0" 
           itemLayout="horizontal"
           dataSource={cart}
           renderItem={(item) => (
             <List.Item
               actions={[
-                 <div className="flex items-center gap-1">
+                 <div className="flex items-center gap-1 mt-2 sm:mt-0">
                      <Button size="small" icon={<MinusOutlined />} onClick={() => updateQuantity(item.product.id, -1)} disabled={item.quantity <= 1} />
-                     <span className="w-6 text-center">{item.quantity}</span>
+                     <span className="w-6 text-center text-sm">{item.quantity}</span>
                      <Button size="small" icon={<PlusOutlined />} onClick={() => updateQuantity(item.product.id, 1)} />
-                     <Button size="small" danger onClick={() => removeFromCart(item.product.id)}>x</Button>
+                     <Button size="small" danger icon={<div className="pb-1">x</div>} onClick={() => removeFromCart(item.product.id)} />
                  </div>
               ]}
+              className="flex-col sm:flex-row items-start sm:items-center"
             >
               <List.Item.Meta
-                title={item.product.name}
-                description={`$${Number(item.product.price).toFixed(2)} x ${item.quantity}`}
+                title={<span className="text-sm font-medium">{item.product.name}</span>}
+                description={<span className="text-xs text-gray-500">{`$${Number(item.product.price).toFixed(2)} x ${item.quantity}`}</span>}
               />
-              <div>${(Number(item.product.price) * item.quantity).toFixed(2)}</div>
+              <div className="font-bold">${(Number(item.product.price) * item.quantity).toFixed(2)}</div>
             </List.Item>
           )}
         />
         
-        <div className="border-t pt-4 mt-4">
-          <div className="flex justify-between text-xl font-bold mb-4">
+        <div className="border-t pt-4 mt-4 pb-2">
+          <div className="flex justify-between text-xl font-bold mb-4 px-2">
             <span>Total:</span>
             <span>${total.toFixed(2)}</span>
           </div>
@@ -168,6 +171,7 @@ export default function POSPage() {
             disabled={cart.length === 0}
             loading={checkoutMutation.isPending}
             onClick={() => checkoutMutation.mutate()}
+            className="mb-1"
           >
             Checkout
           </Button>
